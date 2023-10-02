@@ -43,8 +43,8 @@ class Vendor {
       });
       res.send({
         status: true,
-        response: response,
         message: 'Successfully Created Vendor',
+        response: response,
       });
     } catch (error) {
       res.send({
@@ -56,11 +56,41 @@ class Vendor {
 
   getVendors = async (req, res) => {
     try {
-      const response = await vendorDetails.paginate();
+      const { page, limit, vendorName } = req.query;
+      let conditions = { isDeleted: false };
+
+      const options = {
+        sort: { createdAt: -1 },
+        page: 1,
+        limit: 10,
+        collation: {
+          locale: 'en',
+        },
+      };
+      if (page) {
+        Object.assign(options, {
+          page: page,
+        });
+      }
+      if (limit) {
+        Object.assign(options, {
+          limit: limit,
+        });
+      }
+
+      if (vendorName) {
+        Object.assign(conditions, {
+          vendorName: {
+            $regex: vendorName,
+            $options: 'i',
+          },
+        });
+      }
+      const response = await vendorDetails.paginate(conditions, options);
       res.send({
         status: true,
-        response: response,
         message: 'Successfully get all Vendors',
+        response: response,
       });
     } catch (error) {
       res.send({
@@ -69,10 +99,11 @@ class Vendor {
       });
     }
   };
+
   getVendorById = async (req, res) => {
     try {
       const id = req.params.id;
-      if(!id){
+      if (!id) {
         throw {
           message: 'Please enter a valid id',
         };
@@ -80,8 +111,8 @@ class Vendor {
       const response = await vendorDetails.findById(id);
       res.send({
         status: true,
-        response: response,
         message: 'Successfully get Vendor by id',
+        response: response,
       });
     } catch (error) {
       res.send({
@@ -90,45 +121,20 @@ class Vendor {
       });
     }
   };
+
   updateVendor = async (req, res) => {
     try {
-      const id = req.body.id;
-      const vendorName = req.body.vendorName;
-      const bankAccountNo = req.body.bankAccountNo;
-      const bankName = req.body.bankName;
-
-      const response = await vendorDetails.updateMany(
+      const id = req.params.id; 
+      const response = await vendorDetails.findByIdAndUpdate(
         { _id: id },
-        {
-          $set: {
-            vendorName: vendorName,
-            bankAccountNo: bankAccountNo,
-            bankName: bankName,
-          },
-        }
+        req.body, // Use the request body for the update
+        { new: true } // Return the updated document
       );
-
+  
       res.send({
         status: true,
-        response: response,
         message: 'Successfully updated Vendor Details',
-      });
-    } catch (error) {
-      res.send({
-        status: false,
-        message: error.message,
-      });
-    }
-  };
-
-  deleteVendor = async (req, res) => {
-    try {
-      const id = req.query.id;
-      const response = await vendorDetails.deleteMany({ _id: id });
-      res.send({
-        status: true,
         response: response,
-        message: 'Successfully deleted the Vendor',
       });
     } catch (error) {
       res.send({
@@ -138,25 +144,43 @@ class Vendor {
     }
   };
 
-  // softDeleteVendor = async (req, res) => {
+  // deleteVendor = async (req, res) => {
   //   try {
   //     const id = req.query.id;
-  //     const response = await vendorDetails.updateOne(
-  //       { _id: id },
-  //       { $set: { isDeleted: true } }
-  //     );
+  //     const response = await vendorDetails.deleteMany({ _id: id });
   //     res.send({
   //       status: true,
+  //        message: 'Successfully deleted the Vendor',
   //       response: response,
-  //       message: 'Successfully soft-deleted the Vendor',
+  //
   //     });
   //   } catch (error) {
   //     res.send({
   //       status: false,
-  //       response: error.message,
+  //       message: error.message,
   //     });
   //   }
   // };
+
+  softDeleteVendor = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const response = await vendorDetails.updateOne(
+        { _id: id },
+        { $set: { isDeleted: true } }
+      );
+      res.send({
+        status: true,
+        message: 'Successfully Soft-Deleted the Vendor',
+        response: response,
+      });
+    } catch (error) {
+      res.send({
+        status: false,
+        message: error.message,
+      });
+    }
+  };
 }
 
 module.exports = new Vendor();

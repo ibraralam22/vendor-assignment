@@ -7,8 +7,8 @@ router.get('/vendors/', Vendor.getVendors);
 router.get('/vendors/:id', Vendor.getVendorById);
 
 router.put('/vendors/:id', Vendor.updateVendor);
-router.delete('/vendors/:id',  Vendor.deleteVendor);
-// router.delete('/vendors/:id', Vendor.softDeleteVendor);
+// router.delete('/vendors/:id',  Vendor.deleteVendor);
+router.delete('/vendors/:id', Vendor.softDeleteVendor);
 
 
 module.exports = router;

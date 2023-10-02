@@ -8,7 +8,7 @@ function App() {
   return (
     <Routes>
       <Route exact path='/' element={<VendorList />}></Route>
-      <Route exact path='/vendors' element={<VendorList />}></Route>
+      <Route exact path='/create-vendor' element={<AddVendor />}></Route>
       <Route path='/edit-vendor/:id' element={<EditVendor />} />
     </Routes>
   );

@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { createVendor } from '../services/vendors.service';
+import LoadingSpinner from './spinner';
 
 export default function AddVendor() {
-  
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+
   const [formDetails, setFormData] = useState({
     vendorName: '',
     bankAccountNo: '',
@@ -16,6 +20,7 @@ export default function AddVendor() {
     country: '',
     zipCode: '',
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,10 +31,10 @@ export default function AddVendor() {
 
   const dataStore = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       console.log(formDetails);
-      await axios.post('http://localhost:4200/vendors', formDetails);
-      alert('Vendor registered successfully');
+      await createVendor(formDetails);
       setFormData({
         vendorName: '',
         bankAccountNo: '',
@@ -40,16 +45,21 @@ export default function AddVendor() {
         country: '',
         zipCode: '',
       });
-      navigate('/vendors-list')
+      setShowToast(true);
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/');
+      }, 2000);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <div class='container text-center p-5'>
-        <div className='container mx-auto p-2 w-75 border border-5 rounded-4 justify-content-center'>
+      <div class='container text-center p-5 '>
+        <div className='container mx-auto p-2 w-75 text-bg-light p-3 border border-5 rounded-4 justify-content-center'>
           <form class='well form-horizontal ' onSubmit={dataStore}>
             <fieldset>
               <legend className='text-primary fw-bold'>
@@ -217,11 +227,56 @@ export default function AddVendor() {
                 </div>
               </div>
             </fieldset>
-            <button type='submit' class='btn btn-warning mt-2 mb-2 fw-semibold'>
-              {' '}
-              Submit
-            </button>
+
+            <div class='d-flex justify-content-between align-items-center mt-4'>
+              <button
+                type='button'
+                class='btn btn-outline-danger mt-2 mb-2 fw-semibold'
+                onClick={() => navigate('/')}
+              >
+                Cancel
+              </button>
+
+              <button
+                type='submit'
+                className='btn btn-outline-success mt-2 mb-2 fw-semibold'
+                disabled={loading}
+              >
+                {loading ? <LoadingSpinner /> : 'Submit'}
+              </button>
+            </div>
           </form>
+          <div
+            className={`toast position-fixed bottom-0 end-0 mb-3 me-3 ${
+              showToast ? 'show' : ''
+            }`}
+            role='alert'
+            aria-live='assertive'
+            aria-atomic='true'
+          >
+            <div className='toast-header'>
+              <svg
+                class='bd-placeholder-img rounded me-2'
+                width='20'
+                height='20'
+                xmlns='http://www.w3.org/2000/svg'
+                aria-hidden='true'
+                preserveAspectRatio='xMidYMid slice'
+                focusable='false'
+              >
+                <rect width='100%' height='100%' fill='#007aff'></rect>
+              </svg>
+              <strong className='me-auto'>Vendor Created</strong>
+              <small className='text-muted'>just now..</small>
+              <button
+                type='button'
+                className='btn-close'
+                onClick={() => setShowToast(false)}
+                aria-label='Close'
+              ></button>
+            </div>
+            <div className='toast-body'>Vendor created successfully!!</div>
+          </div>
         </div>
       </div>
       ;

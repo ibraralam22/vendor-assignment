@@ -32,11 +32,8 @@ export const getHttp = (url, params = {}) => {
 
 export const deleteHttp = (url, entity) => {
   return new Promise((resolve, reject) => {
-    let params = {};
-
-    params['data'] = entity;
     axios
-      .delete(url, params)
+      .delete(url, entity)
       .then((response) => {
         if (response && response.data) {
           resolve(response.data);
