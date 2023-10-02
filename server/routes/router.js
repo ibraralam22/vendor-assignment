@@ -4,6 +4,8 @@ const Vendor = require('../controller/vendorController');
 // #Vendor
 router.post('/vendors', Vendor.createVendor);
 router.get('/vendors/', Vendor.getVendors);
+router.get('/vendors/:id', Vendor.getVendorById);
+
 router.put('/vendors/:id', Vendor.updateVendor);
 router.delete('/vendors/:id',  Vendor.deleteVendor);
 // router.delete('/vendors/:id', Vendor.softDeleteVendor);

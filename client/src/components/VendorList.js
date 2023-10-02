@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useNavigate } from 'react-router-dom';
+import { getAllVendors } from '../services/vendors.service';
 
 const VendorList = () => {
   const [vendors, setVendors] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchVendors = async () => {
+    return await getAllVendors();
+  };
 
   useEffect(() => {
-    axios
-      .get('http://localhost:4200/vendors')
-      .then((response) => {
-        const data = response.data.response.docs;
-        setVendors(data);
-      })
-      .catch((error) => console.error(error));
+    const result = fetchVendors();
+    console.log('VENDORSSS::::', result);
   }, []);
 
   const handleDelete = (id, vendorName) => {
@@ -23,17 +25,7 @@ const VendorList = () => {
       buttons: [
         {
           label: 'Yes',
-          onClick: () => {
-            axios
-              .delete(`http://localhost:4200/vendors/${id}`)
-              .then((response) => {
-                console.log('Vendor deleted successfully:', response.data);
-                setVendors(vendors.filter((vendor) => vendor._id !== id));
-              })
-              .catch((error) => {
-                console.error('Error deleting vendor:', error);
-              });
-          },
+          onClick: () => {},
         },
         {
           label: 'No',
@@ -41,6 +33,10 @@ const VendorList = () => {
         },
       ],
     });
+  };
+
+  const editDetails = (id) => {
+    navigate(`/edit-vendor/${id}`);
   };
 
   return (
@@ -67,7 +63,7 @@ const VendorList = () => {
                   <button
                     type='button'
                     class='btn btn-primary'
-                    // onClick={() => editDetails(vendor.id)}
+                    onClick={() => editDetails(vendor._id)}
                   >
                     Edit
                   </button>

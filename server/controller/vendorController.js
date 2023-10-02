@@ -65,11 +65,31 @@ class Vendor {
     } catch (error) {
       res.send({
         status: false,
-        response: error.message,
+        message: error.message,
       });
     }
   };
-
+  getVendorById = async (req, res) => {
+    try {
+      const id = req.params.id;
+      if(!id){
+        throw {
+          message: 'Please enter a valid id',
+        };
+      }
+      const response = await vendorDetails.findById(id);
+      res.send({
+        status: true,
+        response: response,
+        message: 'Successfully get Vendor by id',
+      });
+    } catch (error) {
+      res.send({
+        status: false,
+        message: error.message,
+      });
+    }
+  };
   updateVendor = async (req, res) => {
     try {
       const id = req.body.id;
@@ -96,7 +116,7 @@ class Vendor {
     } catch (error) {
       res.send({
         status: false,
-        response: error.message,
+        message: error.message,
       });
     }
   };
@@ -113,7 +133,7 @@ class Vendor {
     } catch (error) {
       res.send({
         status: false,
-        response: error.message,
+        message: error.message,
       });
     }
   };
