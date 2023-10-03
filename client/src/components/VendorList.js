@@ -12,7 +12,6 @@ const VendorList = () => {
   const [vendors, setVendors] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState(0);
-  const [total, setTotal] = useState(0);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -31,9 +30,6 @@ const VendorList = () => {
     if (result?.response?.limit) {
       setLimit(result?.response?.limit);
     }
-    if (result?.response?.totalDocs) {
-      setTotal(result?.response?.totalDocs);
-    }
     setVendors(result.response.docs);
     setLoading(false);
   }
@@ -43,7 +39,7 @@ const VendorList = () => {
       setData({ page, limit });
     }
     fetchData();
-  }, []);
+  }, [limit, page]);
 
   const handleDelete = (id, vendorName) => {
     confirmAlert({
@@ -89,9 +85,9 @@ const VendorList = () => {
 
   return (
     <>
-      <div class='border border-bottom-0 text-center '>
+      <div className='border border-bottom-0 text-center '>
         {loading && <LoadingSpinner />}
-        <div class='d-flex justify-content-between align-items-center p-3 mt-4 '>
+        <div className='d-flex justify-content-between align-items-center p-3 mt-4 '>
           <h2>Vendors</h2>
           <button
             type='button'
@@ -101,7 +97,7 @@ const VendorList = () => {
             Add Vendor
           </button>
         </div>
-        <table class='h-auto table table-hover'>
+        <table className='h-auto table table-hover'>
           <thead>
             <tr>
               <th scope='col'>S.No</th>
@@ -111,22 +107,22 @@ const VendorList = () => {
               <th scope='col'>Action</th>
             </tr>
           </thead>
-          <tbody class='table-group-divider'>
+          <tbody className='table-group-divider'>
             {vendors?.map((vendor, index) => (
               <tr key={vendor._id}>
                 <th scope='row'>{index + 1}</th>
-                <td class='fw-bold text-capitalize'>{vendor.vendorName}</td>
+                <td className='fw-bold text-capitalize'>{vendor.vendorName}</td>
                 <td>{vendor.bankAccountNo}</td>
-                <td class='text-uppercase'>{vendor.bankName}</td>
+                <td className='text-uppercase'>{vendor.bankName}</td>
                 <td>
                   <div
-                    class='btn-group'
+                    className='btn-group'
                     role='group'
                     aria-label='Basic mixed styles'
                   >
                     <button
                       type='button'
-                      class='btn btn-outline-info fw-semibold'
+                      className='btn btn-outline-info fw-semibold'
                       onClick={() => editDetails(vendor._id)}
                     >
                       Edit
@@ -136,7 +132,7 @@ const VendorList = () => {
                         handleDelete(vendor._id, vendor.vendorName)
                       }
                       type='button'
-                      class='btn btn-outline-danger fw-semibold'
+                      className='btn btn-outline-danger fw-semibold'
                     >
                       Delete
                     </button>
