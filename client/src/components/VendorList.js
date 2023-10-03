@@ -89,7 +89,7 @@ const VendorList = () => {
 
   return (
     <>
-      <div class='mx-auto border border-bottom-0 text-center '>
+      <div class='border border-bottom-0 text-center '>
         {loading && <LoadingSpinner />}
         <div class='d-flex justify-content-between align-items-center p-3 mt-4 '>
           <h2>Vendors</h2>
@@ -122,7 +122,7 @@ const VendorList = () => {
                   <div
                     class='btn-group'
                     role='group'
-                    aria-label='Basic mixed styles example'
+                    aria-label='Basic mixed styles'
                   >
                     <button
                       type='button'
@@ -147,7 +147,7 @@ const VendorList = () => {
           </tbody>
         </table>
 
-        <div className='pagination-container position-relative'>
+        <div className='pagination-container'>
           <ReactPaginate
             initialPage={currentPage - 1}
             pageRangeDisplayed={pages}
