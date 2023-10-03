@@ -89,11 +89,20 @@ const VendorList = () => {
 
   return (
     <>
-      <div class='border border-bottom-0 text-center p-3 mb-2 bg-dark text-white'>
+      <div class='mx-auto border border-bottom-0 text-center '>
         {loading && <LoadingSpinner />}
-        <h4>Vendors</h4>
-        <table class='table table-dark table-hover'>
-          <thead class='table-dark'>
+        <div class='d-flex justify-content-between align-items-center p-3 mt-4 '>
+          <h2>Vendors</h2>
+          <button
+            type='button'
+            className='btn btn-outline-primary btn-lg fw-semibold'
+            onClick={addVendor}
+          >
+            Add Vendor
+          </button>
+        </div>
+        <table class='h-auto table table-hover'>
+          <thead>
             <tr>
               <th scope='col'>S.No</th>
               <th scope='col'>Vendor Name</th>
@@ -106,9 +115,9 @@ const VendorList = () => {
             {vendors?.map((vendor, index) => (
               <tr key={vendor._id}>
                 <th scope='row'>{index + 1}</th>
-                <td class='fw-bold'>{vendor.vendorName}</td>
+                <td class='fw-bold text-capitalize'>{vendor.vendorName}</td>
                 <td>{vendor.bankAccountNo}</td>
-                <td>{vendor.bankName}</td>
+                <td class='text-uppercase'>{vendor.bankName}</td>
                 <td>
                   <div
                     class='btn-group'
@@ -138,15 +147,7 @@ const VendorList = () => {
           </tbody>
         </table>
 
-        <div className='pagination-container d-flex justify-content-between align-items-center mt-4'>
-          <button
-            type='button'
-            className='btn btn-outline-primary btn-lg'
-            onClick={addVendor}
-          >
-            Add Vendor
-          </button>
-
+        <div className='pagination-container position-relative'>
           <ReactPaginate
             initialPage={currentPage - 1}
             pageRangeDisplayed={pages}
